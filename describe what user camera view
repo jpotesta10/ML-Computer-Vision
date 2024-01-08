@@ -1,0 +1,40 @@
+pip install tensorflow opencv-python
+
+
+import cv2
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.applications.mobilenet import MobileNet, preprocess_input, decode_predictions
+
+# Load the pre-trained MobileNet model
+model = MobileNet(weights='imagenet')
+
+# Load the image
+image_path = 'path/to/your/image.jpg'
+img = cv2.imread(image_path)
+img = cv2.resize(img, (224, 224))
+img = np.expand_dims(img, axis=0)
+img = preprocess_input(img)
+
+# Make predictions
+predictions = model.predict(img)
+decoded_predictions = decode_predictions(predictions)
+
+# Display the top prediction
+top_prediction = decoded_predictions[0][0]
+print(f'Top Prediction: {top_prediction[1]} ({top_prediction[2]*100:.2f}%)')
+
+# Display the image with the top prediction label
+cv2.putText(img, f'{top_prediction[1]} ({top_prediction[2]*100:.2f}%)', (10, 30),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+cv2.imshow('Object Recognition', img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+
+
+Replace 'path/to/your/image.jpg' with the path to your own image.
+
+This code uses the MobileNet model from TensorFlow/Keras to recognize objects in the provided image. Note that this is a simplified example, and a complete app would involve integrating this code with a mobile app framework, implementing real-time camera processing, and adding natural language processing for generating descriptive text.
+
+For a production-ready app, you should consider using more advanced models, optimizing for real-time performance, and implementing additional features based on your specific requirements
